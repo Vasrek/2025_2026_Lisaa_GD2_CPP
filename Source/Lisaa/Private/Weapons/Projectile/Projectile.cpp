@@ -1,5 +1,6 @@
 #include "Weapons/Projectile/Projectile.h"
 
+#include "Components/HealthComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -29,6 +30,33 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetLifeSpan(LifeSeconds);
+
+	SphereCol->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlap);
+
+	if (AActor* MyOwner = GetOwner())
+		SphereCol->IgnoreActorWhenMoving(MyOwner, true);
 	
 }
+
+void AProjectile::InitShot(AActor* InOwner, float Speed)
+{
+	SetOwner(InOwner);
+	ProjectileMovement->InitialSpeed = Speed;
+	ProjectileMovement->MaxSpeed = Speed;
+}
+
+void AProjectile::OnOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
+{
+	if (!Other || Other == GetOwner())
+		return;
+	if (UHealthComponent* HealthComp = Other->FindComponentByClass<UHealthComponent>())
+	{
+		HealthComp->ApplyDamageAt(Damage, GetOwner());
+	}
+	Destroy();
+}
+
 

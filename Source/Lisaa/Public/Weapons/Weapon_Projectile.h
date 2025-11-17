@@ -4,6 +4,8 @@
 #include "Weapons/WeaponBaseComponent.h"
 #include "Weapon_Projectile.generated.h"
 
+class AProjectile;
+
 /**
  * 
  */
@@ -13,6 +15,10 @@ class LISAA_API UWeapon_Projectile : public UWeaponBaseComponent
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	TSubclassOf<AProjectile> ProjectileClass;
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float BaseDamage = 10.f;
 
