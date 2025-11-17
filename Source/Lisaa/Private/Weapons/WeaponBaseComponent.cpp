@@ -10,6 +10,11 @@ UWeaponBaseComponent::UWeaponBaseComponent()
 
 void UWeaponBaseComponent::TickFire(float Now)
 {
+
+	const float Interval = GetEffectiveInterval();
+	if (Interval <= 0.f) return;
+	if (Now < NextFireTime) return;
+	
 	FRotator Rot;
 	const FVector OriginMuzzle = GetMuzzleLocation(Rot);
 

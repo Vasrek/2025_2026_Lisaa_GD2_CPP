@@ -45,6 +45,8 @@ protected:
 
 	FVector GetMuzzleLocation(FRotator& OutRot) const;
 
+	float GetEffectiveInterval() const { return BaseInterval / FMath::Max(0.001f, FireRateMult); }
+
 private:
 	float NextFireTime = 0.f;
 };
